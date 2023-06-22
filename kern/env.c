@@ -597,3 +597,14 @@ void envid2env_check() {
 }
 
 
+void env_run(struct Env *e) {
+	assert(e->env_status == ENV_RUNNABLE);
+	pre_env_run(e); // WARNING: DO NOT MODIFY THIS LINE!
+	if (curenv) {
+		curenv->env_tf = *((struct Trapframe *)KSTACKTOP - 1);
+	}
+	curenv = e;
+	curenv->env_runs++; // lab6
+	cur_pgdir = curenv->env_pgdir;
+	env_pop_tf(&(e->env_tf), e->env_asid);	
+}

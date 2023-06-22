@@ -102,8 +102,8 @@ void do_signal(int finished) {
     struct SigTask *s;
     struct LinkedTf *tf = LIST_FIRST(&curenv->tf_stack);
     if (finished) {
-	Restart:    
-	s = curenv->running_task;
+	    Restart:    
+	    s = curenv->running_task;
         LIST_REMOVE(s, sig_link);
         LIST_INSERT_HEAD(&free_sig_list, s, sig_link);    
     }

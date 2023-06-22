@@ -1,4 +1,4 @@
-使用以下命令可以运行测试点，共计九个测试点
+使用以下命令可以运行测试点，共计十个测试点
 
 - make test lab=7_sample1 && make run
 
@@ -35,3 +35,5 @@
 - make test lab=7_exception && make run
 
   信号注册/发射/修改掩码函数异常返回值测试。
+
+- make test lab=7_fork_strong && make run

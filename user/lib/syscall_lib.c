@@ -9,6 +9,9 @@ void syscall_sig_return() {
 }
 
 int syscall_sigprocmask(int how, const sigset_t *set, sigset_t *oldset) {
+	if (oldset) {
+		memset(oldset, 0, sizeof(struct sigset_t));
+	}
 	int ret = msyscall(SYS_sigprocmask, how, set, oldset);
 	syscall_yield();
 	return ret;
@@ -18,11 +21,16 @@ int syscall_sigaction(int signum, const struct sigaction *act, struct sigaction 
 		msyscall(SYS_sig_init, syscall_sig_return);
 		sig_inited = 1;
 	}
+	if (oldact) {
+		memset(oldact, 0, sizeof(struct sigaction));
+	}
 	return msyscall(SYS_sigaction, signum, act, oldact);
 }
 int syscall_kill(u_int envid, int sig) {
 	int ret = msyscall(SYS_kill, envid, sig);
-	syscall_yield();
+	if (envid == 0 || envid == syscall_getenvid()){
+		syscall_yield();
+	}
 	return ret;
 }
 
@@ -109,5 +117,3 @@ int syscall_read_dev(void *va, u_int dev, u_int len) {
 	/* Exercise 5.2: Your code here. (2/2) */
 	return msyscall(SYS_read_dev, va, dev, len);
 }
-
-
